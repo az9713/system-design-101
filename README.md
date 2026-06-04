@@ -18,7 +18,7 @@ The raw local transcript used during generation is intentionally not committed t
 - [`system_design_lecture_notes.md`](system_design_lecture_notes.md)  
   Transcript-grounded lecture notes rewritten for readers coming from classic OOP training.
 
-- [`system_design_learning_lab.html`](system_design_learning_lab.html)  
+- [Open the interactive learning lab](https://az9713.github.io/system-design-101/system_design_learning_lab.html)  
   A standalone browser learning lab with a concept map, request-flow walkthrough, scaling recommender, API chooser, auth drill, quiz, and capstone prompt builder.
 
 - [`assets/request_flow.svg`](assets/request_flow.svg)  
@@ -53,7 +53,7 @@ The first pass produced a dense Markdown note set. That was not enough for the l
 3. A standalone HTML lab for immediate practice and self-checking.
 4. A manifest that documents source scope, generation prompts, and limitations.
 
-The resulting repo is designed to be inspectable without special tooling. Open the Markdown file for reading, or open the HTML file directly in a browser for interactive practice.
+The resulting repo is designed to be inspectable without special tooling. Open the Markdown file for reading, or use the GitHub Pages learning-lab link for interactive practice.
 
 ## Audience
 
@@ -70,7 +70,7 @@ This is written for readers who understand ideas like classes, methods, interfac
 ## How To Use
 
 1. Read [`system_design_lecture_notes.md`](system_design_lecture_notes.md).
-2. Open [`system_design_learning_lab.html`](system_design_learning_lab.html) in a browser.
+2. Open the [interactive learning lab](https://az9713.github.io/system-design-101/system_design_learning_lab.html) as a rendered web page.
 3. Work through the quizzes and exercises.
 4. Use the capstone builder to design a small app, such as a bookstore, task tracker, photo album, or online course platform.
 
