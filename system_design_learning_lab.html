@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System Design Learning Lab</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink: #1d2b36;
+      --muted: #5d6d7d;
+      --line: #d7e0e7;
+      --panel: #f7fafc;
+      --accent: #d49b31;
+      --blue: #315a7d;
+      --green: #3b7c4a;
+      --red: #b95136;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.45;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 20px clamp(16px, 3vw, 42px);
+      background: var(--panel);
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: 0;
+    }
+    .subhead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 980px;
+      font-size: 17px;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      min-height: calc(100vh - 112px);
+    }
+    nav {
+      border-right: 1px solid var(--line);
+      padding: 18px;
+      background: #fbfcfd;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .tab {
+      width: 100%;
+      display: block;
+      text-align: left;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 11px 12px;
+      margin: 4px 0;
+      font-size: 15px;
+      color: var(--ink);
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .tab:hover { border-color: var(--line); background: var(--white); }
+    .tab.active {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+    .content {
+      padding: clamp(18px, 4vw, 42px);
+      max-width: 1180px;
+    }
+    section { display: none; }
+    section.active { display: block; }
+    h2 {
+      font-size: clamp(24px, 3vw, 34px);
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    h3 { margin: 26px 0 10px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--white);
+    }
+    .card h3, .card h4 { margin-top: 0; }
+    .muted { color: var(--muted); }
+    .pill {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 9px;
+      margin: 3px 4px 3px 0;
+      font-size: 13px;
+      background: var(--panel);
+    }
+    .diagram {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      margin: 14px 0;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      background: var(--panel);
+      min-height: 92px;
+    }
+    .step.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 2px rgba(212, 155, 49, 0.25);
+      background: #fffaf0;
+    }
+    .result {
+      border-left: 4px solid var(--blue);
+      padding: 12px 14px;
+      background: var(--panel);
+      margin: 14px 0 0;
+      min-height: 62px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 6px;
+      font-weight: 700;
+    }
+    select, input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      font: inherit;
+      background: var(--white);
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button.action {
+      border: 1px solid var(--blue);
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    button.secondary {
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+    }
+    .answer {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      cursor: pointer;
+      background: var(--white);
+    }
+    .answer.correct { border-color: var(--green); background: #eff8f1; }
+    .answer.wrong { border-color: var(--red); background: #fff5f0; }
+    .score {
+      font-weight: 700;
+      color: var(--blue);
+      margin-top: 12px;
+    }
+    .mono {
+      font-family: Consolas, Monaco, monospace;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 820px) {
+      main { grid-template-columns: 1fr; }
+      nav {
+        height: auto;
+        position: static;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .tab { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>System Design Learning Lab</h1>
+    <p class="subhead">A compact companion to the transcript-based lecture notes. Built for programmers who know classes, interfaces, data structures, and processes, but are new to web application architecture.</p>
+  </header>
+  <main>
+    <nav aria-label="Learning sections">
+      <button class="tab active" data-tab="map">Concept Map</button>
+      <button class="tab" data-tab="flow">Request Flow</button>
+      <button class="tab" data-tab="scale">Scaling Lab</button>
+      <button class="tab" data-tab="api">API Chooser</button>
+      <button class="tab" data-tab="auth">Auth Drill</button>
+      <button class="tab" data-tab="quiz">Quiz</button>
+      <button class="tab" data-tab="capstone">Capstone</button>
+    </nav>
+    <div class="content">
+      <section id="map" class="active">
+        <h2>Concept Map</h2>
+        <p class="muted">Follow this order if you want the shortest path from OOP programming to modern web app architecture.</p>
+        <div class="grid">
+          <div class="card"><h3>1. Client-server</h3><p>Browser or mobile app sends requests. Server returns HTML, JSON, or errors.</p><span class="pill">HTTP</span><span class="pill">DNS</span><span class="pill">JSON</span></div>
+          <div class="card"><h3>2. Data</h3><p>Use SQL when relationships and correctness dominate. Use NoSQL/cache when access patterns demand flexibility or speed.</p><span class="pill">SQL</span><span class="pill">NoSQL</span><span class="pill">Redis</span></div>
+          <div class="card"><h3>3. Scale</h3><p>Vertical scaling makes one machine bigger. Horizontal scaling adds machines and needs traffic distribution.</p><span class="pill">Load balancer</span><span class="pill">Health check</span></div>
+          <div class="card"><h3>4. APIs</h3><p>API contracts are remote method signatures: path, method, input, output, errors, versioning.</p><span class="pill">REST</span><span class="pill">GraphQL</span><span class="pill">gRPC</span></div>
+          <div class="card"><h3>5. Protocols</h3><p>HTTP handles request/response. WebSockets handle real-time bidirectional communication. Queues decouple work.</p><span class="pill">HTTPS</span><span class="pill">TCP</span><span class="pill">UDP</span></div>
+          <div class="card"><h3>6. Trust</h3><p>Authentication identifies the caller. Authorization decides what the caller may do. Security controls reduce abuse.</p><span class="pill">JWT</span><span class="pill">RBAC</span><span class="pill">CSRF</span><span class="pill">XSS</span></div>
+        </div>
+      </section>
+
+      <section id="flow">
+        <h2>Request Flow</h2>
+        <p class="muted">Click each step to connect familiar method-call thinking to networked application behavior.</p>
+        <img class="diagram" src="assets/request_flow.svg" alt="Single-server request flow diagram">
+        <div class="steps" id="requestSteps"></div>
+        <div class="result" id="requestResult">Choose a step.</div>
+      </section>
+
+      <section id="scale">
+        <h2>Scaling Lab</h2>
+        <div class="columns">
+          <div>
+            <p class="muted">Set traffic and reliability needs, then compare vertical and horizontal scaling choices.</p>
+            <label for="traffic">Traffic level</label>
+            <select id="traffic">
+              <option value="low">Low: internal tool or prototype</option>
+              <option value="medium">Medium: public app with busy hours</option>
+              <option value="high">High: millions of users or global service</option>
+            </select>
+            <label for="failure">Tolerance for downtime</label>
+            <select id="failure">
+              <option value="relaxed">Relaxed: short outage is acceptable</option>
+              <option value="moderate">Moderate: outage is costly</option>
+              <option value="strict">Strict: outage is severe</option>
+            </select>
+            <button class="action" id="scaleButton">Recommend architecture</button>
+            <div class="result" id="scaleResult">Pick inputs and run the recommendation.</div>
+          </div>
+          <div>
+            <img class="diagram" src="assets/scaling_load_balancer.svg" alt="Horizontal scaling with load balancers diagram">
+          </div>
+        </div>
+      </section>
+
+      <section id="api">
+        <h2>API Chooser</h2>
+        <p class="muted">Choose the style by client need, data shape, and performance target.</p>
+        <div class="columns">
+          <div class="card">
+            <label for="apiNeed">Main need</label>
+            <select id="apiNeed">
+              <option value="crud">CRUD resources for web/mobile clients</option>
+              <option value="nested">Flexible nested data in fewer round trips</option>
+              <option value="internal">Fast typed service-to-service calls</option>
+              <option value="realtime">Real-time two-way updates</option>
+            </select>
+            <label for="apiExample">Resource name</label>
+            <input id="apiExample" type="text" value="courses">
+            <button class="action" id="apiButton">Generate starter contract</button>
+          </div>
+          <div class="card">
+            <h3>Recommendation</h3>
+            <div id="apiResult" class="mono">Run the chooser.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="auth">
+        <h2>Auth Drill</h2>
+        <div class="columns">
+          <div>
+            <img class="diagram" src="assets/auth_flow.svg" alt="Authentication and authorization flow diagram">
+          </div>
+          <div class="card">
+            <h3>Classify the scenario</h3>
+            <p id="authScenario"></p>
+            <button class="action" data-auth="authentication">Authentication</button>
+            <button class="action secondary" data-auth="authorization">Authorization</button>
+            <div id="authResult" class="result">Choose the right category.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz">
+        <h2>Quiz</h2>
+        <p class="muted">Immediate-feedback quiz. These questions cover the transcript's core claims and the OOP-to-web bridge in the notes.</p>
+        <div id="quizBox"></div>
+        <button class="action" id="nextQuestion">Next question</button>
+        <div class="score" id="score"></div>
+      </section>
+
+      <section id="capstone">
+        <h2>Capstone Builder</h2>
+        <p class="muted">Use this prompt builder to turn any familiar domain into a small system design practice problem.</p>
+        <label for="domain">Application domain</label>
+        <input id="domain" type="text" value="online course platform">
+        <label for="entities">Important entities</label>
+        <input id="entities" type="text" value="users, courses, lessons, comments, enrollments">
+        <button class="action" id="capstoneButton">Build exercise prompt</button>
+        <textarea id="capstoneOutput" aria-label="Generated capstone prompt"></textarea>
+      </section>
+    </div>
+  </main>
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    }));
+
+    const requestSteps = [
+      ['User action', 'The browser starts with a URL or a click. In OOP terms, this is the caller deciding which public operation it wants.'],
+      ['DNS lookup', 'The friendly domain becomes an IP address. This is like resolving a class or service name to the concrete object that can handle the call.'],
+      ['HTTPS request', 'The request contains method, path, headers, and sometimes a body. That is your remote method signature plus arguments.'],
+      ['Server routing', 'The server maps path and method to application code, validates input, and runs business logic.'],
+      ['Data access', 'The app reads or writes persistent state. Unlike an in-memory object, this state survives process restart.'],
+      ['Response', 'The server returns a status code plus HTML, JSON, or an error body. This is the remote return value.']
+    ];
+    const requestStepsEl = document.getElementById('requestSteps');
+    requestSteps.forEach((step, index) => {
+      const div = document.createElement('div');
+      div.className = 'step';
+      div.innerHTML = `<strong>${index + 1}. ${step[0]}</strong><br><span class="muted">${step[1].slice(0, 72)}...</span>`;
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        div.classList.add('active');
+        document.getElementById('requestResult').textContent = step[1];
+      });
+      requestStepsEl.appendChild(div);
+    });
+
+    document.getElementById('scaleButton').addEventListener('click', () => {
+      const traffic = document.getElementById('traffic').value;
+      const failure = document.getElementById('failure').value;
+      let result = '';
+      if (traffic === 'low' && failure === 'relaxed') {
+        result = 'Start with one server plus a managed SQL database. Keep the design simple, but document which component is the single point of failure.';
+      } else if (traffic === 'high' || failure === 'strict') {
+        result = 'Use horizontal scaling: redundant load balancers, multiple stateless API servers, health checks, monitoring, cache for hot reads, and a replicated/failover database plan.';
+      } else {
+        result = 'Use a modest scale-out path: managed load balancer, two or more API servers, health checks, and database backups/failover. Add cache only for measured hot paths.';
+      }
+      document.getElementById('scaleResult').textContent = result;
+    });
+
+    document.getElementById('apiButton').addEventListener('click', () => {
+      const need = document.getElementById('apiNeed').value;
+      const resource = (document.getElementById('apiExample').value || 'items').trim().replace(/\s+/g, '-').toLowerCase();
+      const examples = {
+        crud: `Choose REST.\n\nGET /api/v1/${resource}?limit=20&offset=0\nGET /api/v1/${resource}/{id}\nPOST /api/v1/${resource}\nPATCH /api/v1/${resource}/{id}\nDELETE /api/v1/${resource}/{id}\n\nAdd validation, status codes, auth, pagination, and versioning.`,
+        nested: `Choose GraphQL.\n\nquery {\n  ${resource}(id: "123") {\n    id\n    title\n    owner { id name }\n    recentComments { text createdAt }\n  }\n}\n\nUse when clients need different nested shapes without multiple REST calls.`,
+        internal: `Choose gRPC for internal services.\n\nservice ${titleCase(resource)}Service {\n  rpc Get${singularTitle(resource)} (Get${singularTitle(resource)}Request) returns (${singularTitle(resource)});\n}\n\nUse for typed, high-performance service-to-service calls.`,
+        realtime: `Use WebSockets for live bidirectional updates.\n\nClient subscribes to ${resource} updates.\nServer pushes events when state changes.\n\nKeep normal CRUD over REST/GraphQL unless everything is real-time.`
+      };
+      document.getElementById('apiResult').textContent = examples[need];
+    });
+
+    function titleCase(value) {
+      return value.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+    }
+    function singularTitle(value) {
+      const t = titleCase(value);
+      return t.endsWith('s') ? t.slice(0, -1) : t;
+    }
+
+    const authScenarios = [
+      ['User sends username and password to prove identity.', 'authentication', 'This answers who the user is.'],
+      ['Logged-in user tries to delete an admin-only resource.', 'authorization', 'The user may be known, but the action still needs permission.'],
+      ['API verifies a JWT signature and extracts the user ID.', 'authentication', 'The token is being used to identify the caller.'],
+      ['Policy checks whether role editor can publish a course.', 'authorization', 'The policy decides what the caller can do.']
+    ];
+    let authIndex = 0;
+    function renderAuth() {
+      document.getElementById('authScenario').textContent = authScenarios[authIndex][0];
+      document.getElementById('authResult').textContent = 'Choose the right category.';
+    }
+    document.querySelectorAll('[data-auth]').forEach(button => {
+      button.addEventListener('click', () => {
+        const current = authScenarios[authIndex];
+        const ok = button.dataset.auth === current[1];
+        document.getElementById('authResult').textContent = ok ? `Correct. ${current[2]}` : `Not quite. ${current[2]}`;
+        authIndex = (authIndex + 1) % authScenarios.length;
+        setTimeout(renderAuth, 1400);
+      });
+    });
+    renderAuth();
+
+    const questions = [
+      {
+        q: 'Which design usually helps a system handle more traffic and tolerate individual server failure?',
+        answers: ['Horizontal scaling behind a load balancer', 'One larger server forever', 'Putting all state in process memory'],
+        correct: 0
+      },
+      {
+        q: 'Which API style is most naturally resource-based and uses HTTP methods like GET, POST, PATCH, and DELETE?',
+        answers: ['gRPC', 'REST', 'UDP'],
+        correct: 1
+      },
+      {
+        q: 'What does authorization decide?',
+        answers: ['Who the caller is', 'Whether packets arrive in order', 'What the caller is allowed to do'],
+        correct: 2
+      },
+      {
+        q: 'Why use pagination?',
+        answers: ['To avoid returning huge result sets at once', 'To encrypt credentials', 'To replace health checks'],
+        correct: 0
+      },
+      {
+        q: 'Which protocol tradeoff is reliable but slower?',
+        answers: ['TCP', 'UDP', 'IP hash'],
+        correct: 0
+      },
+      {
+        q: 'Which attack tricks a logged-in browser into making an unwanted request?',
+        answers: ['XSS', 'CSRF', 'Least connections'],
+        correct: 1
+      }
+    ];
+    let questionIndex = 0;
+    let score = 0;
+    let answered = false;
+    function renderQuestion() {
+      answered = false;
+      const item = questions[questionIndex];
+      const box = document.getElementById('quizBox');
+      box.innerHTML = `<h3>${item.q}</h3>`;
+      item.answers.forEach((answer, index) => {
+        const div = document.createElement('div');
+        div.className = 'answer';
+        div.textContent = answer;
+        div.addEventListener('click', () => {
+          if (answered) return;
+          answered = true;
+          if (index === item.correct) {
+            div.classList.add('correct');
+            score++;
+          } else {
+            div.classList.add('wrong');
+            box.querySelectorAll('.answer')[item.correct].classList.add('correct');
+          }
+          document.getElementById('score').textContent = `Score: ${score} / ${questions.length}`;
+        });
+        box.appendChild(div);
+      });
+      document.getElementById('score').textContent = `Score: ${score} / ${questions.length}`;
+    }
+    document.getElementById('nextQuestion').addEventListener('click', () => {
+      questionIndex = (questionIndex + 1) % questions.length;
+      renderQuestion();
+    });
+    renderQuestion();
+
+    document.getElementById('capstoneButton').addEventListener('click', () => {
+      const domain = document.getElementById('domain').value || 'web application';
+      const entities = document.getElementById('entities').value || 'users, items, events';
+      const article = /^[aeiou]/i.test(domain.trim()) ? 'an' : 'a';
+      document.getElementById('capstoneOutput').value =
+`Design ${article} ${domain}.\n\nEntities: ${entities}.\n\nProduce:\n1. A one-server architecture.\n2. A scaled architecture with load balancer and health checks.\n3. SQL vs NoSQL choices for each entity.\n4. Five REST endpoints with methods and status codes.\n5. One case where GraphQL, WebSockets, gRPC, or a queue would help.\n6. Authentication flow and authorization model.\n7. Three single points of failure.\n8. Three security risks: CSRF, XSS, SQL injection, rate abuse, or leaked tokens.\n\nConstraint: explain every choice using one sentence and one tradeoff.`;
+    });
+    document.getElementById('capstoneButton').click();
+  </script>
+</body>
+</html>

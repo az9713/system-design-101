@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+  <title id="title">Horizontal scaling with load balancers and health checks</title>
+  <desc id="desc">Clients send requests through redundant load balancers to multiple API servers, which share cache and database dependencies. Health checks remove unhealthy servers.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#315a7d"/>
+    </marker>
+    <style>
+      .box{fill:#f7fafc;stroke:#315a7d;stroke-width:2}
+      .warn{fill:#fff5f0;stroke:#c65f36;stroke-width:2}
+      .ok{fill:#eff8f1;stroke:#3b7c4a;stroke-width:2}
+      .text{font:16px Arial, sans-serif;fill:#1d2b36}
+      .small{font:13px Arial, sans-serif;fill:#2f4050}
+      .label{font:700 18px Arial, sans-serif;fill:#1d2b36}
+      .arrow{stroke:#315a7d;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .dash{stroke:#3b7c4a;stroke-width:2.5;fill:none;stroke-dasharray:8 6;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1100" height="560" fill="#ffffff"/>
+  <text x="40" y="45" class="label">Scale-out shape: add servers, distribute traffic, monitor failure</text>
+  <rect x="45" y="155" width="150" height="105" rx="8" class="box"/>
+  <text x="120" y="195" text-anchor="middle" class="label">Clients</text>
+  <text x="120" y="225" text-anchor="middle" class="small">web + mobile</text>
+  <rect x="285" y="105" width="170" height="90" rx="8" class="ok"/>
+  <text x="370" y="142" text-anchor="middle" class="label">LB A</text>
+  <text x="370" y="166" text-anchor="middle" class="small">active</text>
+  <rect x="285" y="245" width="170" height="90" rx="8" class="ok"/>
+  <text x="370" y="282" text-anchor="middle" class="label">LB B</text>
+  <text x="370" y="306" text-anchor="middle" class="small">standby/active</text>
+  <rect x="570" y="65" width="165" height="80" rx="8" class="box"/>
+  <text x="652" y="99" text-anchor="middle" class="label">API 1</text>
+  <text x="652" y="122" text-anchor="middle" class="small">healthy</text>
+  <rect x="570" y="185" width="165" height="80" rx="8" class="box"/>
+  <text x="652" y="219" text-anchor="middle" class="label">API 2</text>
+  <text x="652" y="242" text-anchor="middle" class="small">healthy</text>
+  <rect x="570" y="305" width="165" height="80" rx="8" class="warn"/>
+  <text x="652" y="339" text-anchor="middle" class="label">API 3</text>
+  <text x="652" y="362" text-anchor="middle" class="small">unhealthy</text>
+  <rect x="845" y="112" width="180" height="95" rx="8" class="box"/>
+  <text x="935" y="150" text-anchor="middle" class="label">Cache</text>
+  <text x="935" y="175" text-anchor="middle" class="small">fast repeated reads</text>
+  <rect x="845" y="280" width="180" height="110" rx="8" class="warn"/>
+  <text x="935" y="323" text-anchor="middle" class="label">Database</text>
+  <text x="935" y="349" text-anchor="middle" class="small">SPOF unless replicated</text>
+  <path d="M195 205 C235 170 245 150 285 150" class="arrow"/>
+  <path d="M195 220 C235 255 245 290 285 290" class="arrow"/>
+  <path d="M455 150 C500 110 525 105 570 105" class="arrow"/>
+  <path d="M455 150 C505 185 525 213 570 225" class="arrow"/>
+  <path d="M455 290 C505 255 525 237 570 225" class="arrow"/>
+  <path d="M455 290 C505 330 525 345 570 345" class="arrow"/>
+  <path d="M735 105 C790 120 805 145 845 158" class="arrow"/>
+  <path d="M735 225 C800 220 815 180 845 165" class="arrow"/>
+  <path d="M735 345 C790 350 805 340 845 335" class="arrow"/>
+  <path d="M750 405 C640 470 485 430 370 335" class="dash"/>
+  <text x="505" y="468" class="small">health checks remove unhealthy instances from rotation</text>
+  <rect x="45" y="445" width="330" height="70" rx="8" fill="#f7f1df" stroke="#d49b31"/>
+  <text x="65" y="475" class="text">Vertical scaling = bigger machine.</text>
+  <text x="65" y="500" class="text">Horizontal scaling = more machines.</text>
+  <rect x="735" y="445" width="290" height="70" rx="8" fill="#fff5f0" stroke="#c65f36"/>
+  <text x="755" y="475" class="text">Redundancy matters:</text>
+  <text x="755" y="500" class="text">one critical component can sink the system.</text>
+</svg>

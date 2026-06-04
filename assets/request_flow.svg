@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
+  <title id="title">Single-server request flow</title>
+  <desc id="desc">A browser resolves a domain, sends an HTTPS request to a server, the server reads data from a database, and returns HTML, JSON, CSS, and JavaScript.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#315a7d"/>
+    </marker>
+    <style>
+      .box{fill:#f7fafc;stroke:#315a7d;stroke-width:2}
+      .dark{fill:#315a7d}
+      .accent{fill:#f2b84b}
+      .text{font:18px Arial, sans-serif;fill:#1d2b36}
+      .small{font:14px Arial, sans-serif;fill:#2f4050}
+      .label{font:700 18px Arial, sans-serif;fill:#1d2b36}
+      .arrow{stroke:#315a7d;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1100" height="520" fill="#ffffff"/>
+  <text x="40" y="48" class="label">Modern web request: same mental model as a method call, but across machines</text>
+  <rect x="50" y="130" width="160" height="110" rx="8" class="box"/>
+  <text x="130" y="170" text-anchor="middle" class="label">Browser</text>
+  <text x="130" y="198" text-anchor="middle" class="small">User clicks</text>
+  <text x="130" y="220" text-anchor="middle" class="small">or opens URL</text>
+  <rect x="285" y="80" width="170" height="90" rx="8" class="box"/>
+  <text x="370" y="117" text-anchor="middle" class="label">DNS</text>
+  <text x="370" y="143" text-anchor="middle" class="small">domain to IP</text>
+  <rect x="525" y="105" width="220" height="180" rx="8" class="box"/>
+  <text x="635" y="145" text-anchor="middle" class="label">Web / API Server</text>
+  <text x="635" y="178" text-anchor="middle" class="small">routes request</text>
+  <text x="635" y="202" text-anchor="middle" class="small">runs application code</text>
+  <text x="635" y="226" text-anchor="middle" class="small">validates input</text>
+  <text x="635" y="250" text-anchor="middle" class="small">returns response</text>
+  <rect x="825" y="130" width="185" height="125" rx="8" class="box"/>
+  <text x="917" y="175" text-anchor="middle" class="label">Database</text>
+  <text x="917" y="204" text-anchor="middle" class="small">persistent state</text>
+  <text x="917" y="226" text-anchor="middle" class="small">tables/documents/keys</text>
+  <path d="M210 155 C240 120 255 115 285 115" class="arrow"/>
+  <text x="235" y="102" class="small">1. resolve</text>
+  <path d="M455 130 C490 140 500 150 525 165" class="arrow"/>
+  <text x="470" y="115" class="small">2. IP address</text>
+  <path d="M210 205 C335 245 425 245 525 220" class="arrow"/>
+  <text x="305" y="277" class="small">3. HTTPS request: method + path + headers + body</text>
+  <path d="M745 192 L825 192" class="arrow"/>
+  <text x="766" y="178" class="small">4. query</text>
+  <path d="M825 228 L745 228" class="arrow"/>
+  <text x="760" y="252" class="small">5. data</text>
+  <path d="M525 260 C395 345 260 335 155 245" class="arrow"/>
+  <text x="252" y="365" class="small">6. response: HTML page or JSON data</text>
+  <rect x="50" y="405" width="960" height="55" rx="8" fill="#f7f1df" stroke="#d49b31"/>
+  <text x="70" y="439" class="text">OOP bridge: the API endpoint is like a public method signature; the HTTP request is the method call; JSON is the argument/return object.</text>
+</svg>
